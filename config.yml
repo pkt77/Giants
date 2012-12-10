@@ -1,0 +1,11 @@
+Giants Configuration:
+  Giant Stats:
+    Spawn Chance: 10
+    Experiance: 5
+    Health: 100
+    Fire Attack: false
+    Spawn Worlds:
+    Drops:
+  Debug Mode: true
+  Language:
+    Debug Message: '&2A Giant has spawned! X:&F%X &2Y:&F%Y &2Z:&F%Z'

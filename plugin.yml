@@ -1,0 +1,22 @@
+name: Giants
+main: me.pkt77.giants.Giants
+version: 1.0
+author: pkt77
+
+commands:
+    giants:
+        description: Shows list of commands.
+
+permissions:
+    giants.*:
+        description: Gives all permissions.
+        default: false
+        children:
+            giants.reload: true
+            giants.debug: true
+    giants.reload:
+        description: Reloads the config file.
+        default: false
+    giants.debug:
+        description: Shows Debug messages.
+        default: false
