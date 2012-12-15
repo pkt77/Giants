@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -52,46 +53,49 @@ public class Listeners implements Listener {
 	public void onCreatureSpawn(CreatureSpawnEvent event) {
 		Entity entity = event.getEntity();
 		EntityType type = event.getEntityType();
+		SpawnReason spawnReason = event.getSpawnReason();
 
 		if (!API.getGiantSpawnWorlds().contains(entity.getWorld().getName())) {
 			return;
 		}
 
-		if ((type == EntityType.ZOMBIE) || (type == EntityType.SKELETON) || (type == EntityType.COW) || (type == EntityType.SHEEP) || (type == EntityType.PIG_ZOMBIE)) {
-			String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Spawn Chance");
-			int sRate;
-			try {
-				sRate = Integer.parseInt(string);
-			} catch (NumberFormatException e) {
-				sRate = 0;
-			}
-			int chance = 100 - sRate;
-
-			Random rand = new Random();
-			int choice = rand.nextInt(100) < chance ? 1 : 0;
-			if (choice == 0) {
-				Location location = event.getEntity().getLocation();
-				double x = location.getX();
-				double y = location.getY();
-				double z = location.getZ();
-
-				int x2 = (int) x;
-				int y2 = (int) y;
-				int z2 = (int) z;
-
-				int spawngiant = 1;
-				int checkcount = 0;
-				while (checkcount < 10) {
-					y2 += checkcount;
-
-					if (entity.getWorld().getBlockTypeIdAt(x2, y2, z2) != 0) {
-						spawngiant = 0;
-					}
-					checkcount++;
+		if (spawnReason == SpawnReason.NATURAL) {
+			if ((type == EntityType.ZOMBIE) || (type == EntityType.SKELETON) || (type == EntityType.COW) || (type == EntityType.SHEEP) || (type == EntityType.PIG_ZOMBIE)) {
+				String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Spawn Chance");
+				float sRate;
+				try {
+					sRate = Float.parseFloat(string);
+				} catch (NumberFormatException e) {
+					sRate = 0;
 				}
-				if (spawngiant == 1) {
-					SpawnEvent SE = new SpawnEvent(location);
-					Bukkit.getServer().getPluginManager().callEvent(SE);
+				float chance = 100 - sRate;
+
+				Random rand = new Random();
+				double choice = rand.nextInt(100) < chance ? 1 : 0;
+				if (choice == 0) {
+					Location location = event.getEntity().getLocation();
+					double x = location.getX();
+					double y = location.getY();
+					double z = location.getZ();
+
+					int x2 = (int) x;
+					int y2 = (int) y;
+					int z2 = (int) z;
+
+					int spawngiant = 1;
+					int checkcount = 0;
+					while (checkcount < 10) {
+						y2 += checkcount;
+
+						if (entity.getWorld().getBlockTypeIdAt(x2, y2, z2) != 0) {
+							spawngiant = 0;
+						}
+						checkcount++;
+					}
+					if (spawngiant == 1) {
+						SpawnEvent SE = new SpawnEvent(location);
+						Bukkit.getServer().getPluginManager().callEvent(SE);
+					}
 				}
 			}
 		}
@@ -114,42 +118,55 @@ public class Listeners implements Listener {
 		}
 	}
 
-	//TODO: if Fire Attack is false... it still attacks with fire
 	@EventHandler
 	public void onEntityTarget(EntityTargetEvent event) {
-		Entity target = event.getTarget();
+		String string1 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Ticks for Target");
+		String string2 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Ticks for Giant");
 		Entity entity = event.getEntity();
+		int ticksTarget;
+		int ticksGiant;
+
+		try {
+			ticksTarget = Integer.parseInt(string1);
+			ticksGiant = Integer.parseInt(string2);
+		} catch (Exception e) {
+			ticksTarget = 0;
+			ticksGiant = 0;
+		}
 
 		if ((entity instanceof LivingEntity)) {
-			if (API.isGiant(entity) && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack").equalsIgnoreCase("true")) {
-				event.getEntity().setFireTicks(2);
-				int fireTicks = target.getMaxFireTicks();
-				target.setFireTicks(fireTicks);
+			if (API.isGiant(entity) && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Enabled") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Enabled").equalsIgnoreCase("true")) {
+				try {
+					event.getTarget().setFireTicks(ticksTarget);
+					event.getEntity().setFireTicks(ticksGiant);
+				} catch (Exception e) {
+				}
 			}
 		}
 	}
 
 	/*
-		//TODO: Custom death messages for giants
 		@EventHandler
-		public void onPlayerDeath(PlayerDeathEvent event) {
-			List<String> string = API.getFileHandler().getPropertyList(Config.CONFIG, "Giants Configuration.Language.Death Messages");
-			Player player = (Player) event.getEntity();
-			DamageCause damageCause = player.getLastDamageCause().getCause();
-			
-			if (damageCause == DamageCause.ENTITY_ATTACK) {
-				if (API.isGiant(player)) {
-					Random random = new Random();
-					String message = random.nextInt(100);
-					
-				}
+		public void onEntityHitEvent(EntityDamageEvent event) {
+			String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Damage");
+			int damage;
+
+			try {
+				damage = Integer.parseInt(string);
+			} catch (Exception e) {
+				damage = 100;
+			}
+
+			Entity entity = event.getEntity();
+			if (API.isGiant(entity)) {
+				event.setDamage(damage);
 			}
 		}*/
 
 	@EventHandler
 	public void onGiantDeath(EntityDeathEvent event) {
 		Entity entity = event.getEntity();
-		String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Experiance");
+		String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Experience");
 		int exp;
 
 		try {

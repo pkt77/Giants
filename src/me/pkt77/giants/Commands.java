@@ -1,5 +1,6 @@
 package me.pkt77.giants;
 
+import me.pkt77.giants.utils.API;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,7 +27,7 @@ public class Commands implements CommandExecutor {
 			} else {
 				if (args[0].equalsIgnoreCase("reload")) {
 					if (_giants.getPermissions().hasReloadPerm(sender)) {
-						_giants.reloadConfig();
+						API.getFileHandler().loadConfig();
 						sender.sendMessage(ChatColor.GREEN + "Giants config file reloaded");
 					} else {
 						_giants.getPermissions().sendPermissionsMessage(sender);

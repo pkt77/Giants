@@ -60,12 +60,24 @@ public class FileHandler {
 		switch (config) {
 		case CONFIG:
 			YamlConfiguration Config = YamlConfiguration.loadConfiguration(file);
-			Config.set("Giants Configuration.Giant Stats.Spawn Chance", new Integer(10));
-			Config.set("Giants Configuration.Giant Stats.Experiance", new Integer(5));
+			Config.set("Giants Configuration.Giant Stats.Experience", new Integer(5));
 			Config.set("Giants Configuration.Giant Stats.Health", new Integer(100));
-			Config.set("Giants Configuration.Giant Stats.Fire Attack", false);
+			//Config.set("Giants Configuration.Giant Stats.Damage", new Integer(100));
+			Config.set("Giants Configuration.Giant Stats.Fire Attack.Enabled", false);
+			Config.set("Giants Configuration.Giant Stats.Fire Attack.Ticks for Target", new Integer(100));
+			Config.set("Giants Configuration.Giant Stats.Fire Attack.Ticks for Giant", new Integer(100));
 			Config.set("Giants Configuration.Giant Stats.Spawn Worlds", WorldHandler.getServerWorlds());
 			Config.set("Giants Configuration.Giant Stats.Drops", Arrays.asList(this.loadDefaultDrop()));
+			Config.set("Giants Configuration.Spawn Settings.Spawn Chance", new Integer(10));
+			//Config.set("Giants Configuration.Spawn Settings.Time.Day", true);
+			//Config.set("Giants Configuration.Spawn Settings.Time.Night", false);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Forest", true);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Desert", true);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Extreme Hills", true);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Jungle", true);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Plains", true);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Swamp", true);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Taiga", true);
 			Config.set("Giants Configuration.Debug Mode", true);
 			Config.set("Giants Configuration.Language.Debug Message", "&2A Giant has spawned! X:&F%X &2Y:&F%Y &2Z:&F%Z");
 			//Config.set("Giants Configuration.Language.Death Messages", Arrays.asList(this.loadDefaultDeathMessage()));

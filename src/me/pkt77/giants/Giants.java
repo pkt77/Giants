@@ -11,8 +11,6 @@ public class Giants extends JavaPlugin {
 	private final WorldHandler worldHandler = new WorldHandler(this);
 
 	/*TODO:
-	 * fix item drops
-	 * add language option
 	 * add custom death messages (Maybe Customizable)
 	 * add spout features (Custom skins/sounds)
 	 * make a giant spawn egg with spout
@@ -20,6 +18,17 @@ public class Giants extends JavaPlugin {
 	 * improve attacking mechanics
 	 * Spawn in day OR night
 	 * MORE TO COME (THINKING)
+	 */
+
+	/*CHANGE LOG:
+	 * V1.1 :
+	 * Giants no longer spawn from spawn eggs
+	 * changed spawn chance to a float so it can store decimals
+	 * Removed Damage modifier - it causes a player to kill a Giant instantly
+	 * V1.2 :
+	 * Fixed spelling error for Experience in config
+	 * V2.0 :
+	 * Biome Spawn settings
 	 */
 
 	@Override

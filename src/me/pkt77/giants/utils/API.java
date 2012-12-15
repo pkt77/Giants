@@ -6,6 +6,7 @@ import me.pkt77.giants.Giants;
 import me.pkt77.giants.events.Listeners;
 import me.pkt77.giants.file.Config;
 import me.pkt77.giants.file.FileHandler;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.LivingEntity;
@@ -38,5 +39,25 @@ public class API {
 
 	public static FileHandler getFileHandler() {
 		return fileHandler;
+	}
+
+	public static boolean isDay() {
+		World world = _giants.getServer().getWorld(API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Spawn Worlds"));
+		long worldTime = world.getTime();
+
+		if (worldTime >= 0 && worldTime <= 1400) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isNight() {
+		World world = _giants.getServer().getWorld(API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Spawn Worlds"));
+		long worldTime = world.getTime();
+
+		if (worldTime >= 14000 && worldTime <= 24000) {
+			return true;
+		}
+		return false;
 	}
 }

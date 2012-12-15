@@ -1,11 +1,24 @@
 Giants Configuration:
   Giant Stats:
-    Spawn Chance: 10
-    Experiance: 5
+    Experience: 5
     Health: 100
-    Fire Attack: false
+    Fire Attack:
+      Enabled: false
+      Ticks for Target: 100
+      Ticks for Giant: 100
     Spawn Worlds:
     Drops:
+    - '1:0:1'
+  Spawn Settings:
+    Spawn Chance: 10
+    Biomes:
+      Forest: true
+      Desert: true
+      Extreme Hills: true
+      Jungle: true
+      Plains: true
+      Swamp: true
+      Taiga: true
   Debug Mode: true
   Language:
     Debug Message: '&2A Giant has spawned! X:&F%X &2Y:&F%Y &2Z:&F%Z'
