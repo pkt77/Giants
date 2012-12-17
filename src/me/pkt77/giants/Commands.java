@@ -16,7 +16,7 @@ public class Commands implements CommandExecutor {
 
 	@EventHandler
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		if (((commandLabel.equalsIgnoreCase("giants")) || commandLabel.equalsIgnoreCase("founddiamonds"))) {
+		if (commandLabel.equalsIgnoreCase("giants")) {
 			if (args.length == 0) {
 				if (_giants.getPermissions().hasAnyPerm(sender)) {
 					sender.sendMessage(ChatColor.GREEN + "===== Giants Commands ===== \n" + "/giants reload   Reloads the config file.");
