@@ -37,26 +37,23 @@ public class SpawnEvent extends Event {
 					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
 				}
 			}
-			if (biome == Biome.EXTREME_HILLS) {
-				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Extreme Hills") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Extreme Hills").equalsIgnoreCase("true")) {
-					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
-				}
-			}
-			if (biome == Biome.HELL) {
-				entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
-			}
-			if (biome == Biome.JUNGLE) {
-				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Jungle") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Jungle").equalsIgnoreCase("true")) {
-					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
-				}
-			}
 			if (biome == Biome.PLAINS) {
 				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Plains") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Plains").equalsIgnoreCase("true")) {
 					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
 				}
 			}
 			if (biome == Biome.SWAMPLAND) {
-				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Swamp") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Swamp").equalsIgnoreCase("true")) {
+				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Swampland") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Swampland").equalsIgnoreCase("true")) {
+					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
+				}
+			}
+			if (biome == Biome.JUNGLE) {
+				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Jungle") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Jungle").equalsIgnoreCase("true")) {
+					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
+				}
+			}
+			if (biome == Biome.ICE_PLAINS) {
+				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Ice Plains") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Ice Plains").equalsIgnoreCase("true")) {
 					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
 				}
 			}
@@ -64,6 +61,27 @@ public class SpawnEvent extends Event {
 				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Taiga") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Taiga").equalsIgnoreCase("true")) {
 					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
 				}
+			}
+			if (biome == Biome.EXTREME_HILLS) {
+				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Extreme Hills") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Extreme Hills").equalsIgnoreCase("true")) {
+					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
+				}
+			}
+			if (biome == Biome.ICE_MOUNTAINS) {
+				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Ice Mountains") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Ice Mountains").equalsIgnoreCase("true")) {
+					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
+				}
+			}
+			if (biome == Biome.MUSHROOM_ISLAND) {
+				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Mushroom Island") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Mushroom Island").equalsIgnoreCase("true")) {
+					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
+				}
+			}
+			if (biome == Biome.HELL) {
+				entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
+			}
+			if (biome == Biome.SKY) {
+				entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
 			}
 		}
 	}

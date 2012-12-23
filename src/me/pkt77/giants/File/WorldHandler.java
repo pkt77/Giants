@@ -11,7 +11,7 @@ public class WorldHandler {
 	private static Giants _giants;
 	@SuppressWarnings("unused")
 	private API api;
-	
+
 	public WorldHandler(Giants giants) {
 		WorldHandler._giants = giants;
 	}
@@ -24,7 +24,7 @@ public class WorldHandler {
 		return worldList;
 	}
 
-    public boolean isEnabledWorld(Player player) {
-        return API.getFileHandler().getPropertyList(Config.CONFIG, "Giants Configuration.Giant Stats.Spawn Worlds").contains(player.getWorld().getName());
-    }
+	public boolean isEnabledWorld(Player player) {
+		return API.getFileHandler().getPropertyList(Config.CONFIG, "Giants Configuration.Giant Stats.Spawn Worlds").contains(player.getWorld().getName());
+	}
 }

@@ -8,7 +8,6 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
-
 import me.pkt77.giants.Giants;
 import me.pkt77.giants.utils.Message;
 
@@ -71,13 +70,16 @@ public class FileHandler {
 			Config.set("Giants Configuration.Spawn Settings.Spawn Chance", new Integer(10));
 			//Config.set("Giants Configuration.Spawn Settings.Time.Day", true);
 			//Config.set("Giants Configuration.Spawn Settings.Time.Night", false);
-			Config.set("Giants Configuration.Spawn Settings.Biomes.Forest", true);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Forest", false);
 			Config.set("Giants Configuration.Spawn Settings.Biomes.Desert", true);
-			Config.set("Giants Configuration.Spawn Settings.Biomes.Extreme Hills", true);
-			Config.set("Giants Configuration.Spawn Settings.Biomes.Jungle", true);
 			Config.set("Giants Configuration.Spawn Settings.Biomes.Plains", true);
-			Config.set("Giants Configuration.Spawn Settings.Biomes.Swamp", true);
-			Config.set("Giants Configuration.Spawn Settings.Biomes.Taiga", true);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Swampland", true);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Jungle", false);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Ice Plains", false);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Taiga", false);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Extreme Hills", true);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Ice Mountains", false);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Mushroom Island", true);
 			Config.set("Giants Configuration.Debug Mode", true);
 			Config.set("Giants Configuration.Language.Debug Message", "&2A Giant has spawned! X:&F%X &2Y:&F%Y &2Z:&F%Z");
 			//Config.set("Giants Configuration.Language.Death Messages", Arrays.asList(this.loadDefaultDeathMessage()));

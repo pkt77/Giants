@@ -14,7 +14,7 @@ public class Message {
 		logName = "[Giants]";
 		prefix = ChatColor.BLUE + logName + ChatColor.GRAY;
 	}
-	
+
 	public static void logInfo(String message) {
 		log.info(logName + message);
 	}

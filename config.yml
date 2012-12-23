@@ -12,13 +12,16 @@ Giants Configuration:
   Spawn Settings:
     Spawn Chance: 10
     Biomes:
-      Forest: true
+      Forest: false
       Desert: true
-      Extreme Hills: true
-      Jungle: true
       Plains: true
-      Swamp: true
-      Taiga: true
+      Swampland: true
+      Jungle: false
+      Ice Plains: false
+      Taiga: false
+      Extreme Hills: true
+      Ice Mountains: false
+      Mushroom Island: true
   Debug Mode: true
   Language:
     Debug Message: '&2A Giant has spawned! X:&F%X &2Y:&F%Y &2Z:&F%Z'

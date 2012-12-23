@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import me.pkt77.giants.Giants;
 import me.pkt77.giants.file.Config;
+import me.pkt77.giants.spout.GiantEgg;
 import me.pkt77.giants.utils.API;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,7 +22,10 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.getspout.spoutapi.inventory.SpoutItemStack;
+import org.getspout.spoutapi.material.CustomItem;
 
 public class Listeners implements Listener {
 	private Giants _giants;
@@ -60,7 +64,7 @@ public class Listeners implements Listener {
 		}
 
 		if (spawnReason == SpawnReason.NATURAL) {
-			if ((type == EntityType.ZOMBIE) || (type == EntityType.SKELETON) || (type == EntityType.COW) || (type == EntityType.SHEEP) || (type == EntityType.PIG_ZOMBIE)) {
+			if ((type == EntityType.ZOMBIE) || (type == EntityType.SKELETON) || (type == EntityType.COW) || (type == EntityType.SHEEP) || (type == EntityType.MUSHROOM_COW) || (type == EntityType.PIG_ZOMBIE) || (type == EntityType.ENDERMAN)) {
 				String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Spawn Chance");
 				float sRate;
 				try {
@@ -83,7 +87,7 @@ public class Listeners implements Listener {
 					int z2 = (int) z;
 
 					int spawngiant = 1;
-					int checkcount = 0;
+					double checkcount = 0.01;
 					while (checkcount < 10) {
 						y2 += checkcount;
 
@@ -123,6 +127,7 @@ public class Listeners implements Listener {
 		String string1 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Ticks for Target");
 		String string2 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Ticks for Giant");
 		Entity entity = event.getEntity();
+		Entity target = event.getTarget();
 		int ticksTarget;
 		int ticksGiant;
 
@@ -141,6 +146,8 @@ public class Listeners implements Listener {
 					event.getEntity().setFireTicks(ticksGiant);
 				} catch (Exception e) {
 				}
+			} else {
+				event.setTarget(target);
 			}
 		}
 	}
@@ -244,6 +251,23 @@ public class Listeners implements Listener {
 				drops.add(newItem);
 			}
 			event.getDrops().addAll(drops);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		Player player = event.getPlayer();
+		Location location = player.getLocation();
+		SpoutItemStack itemInHand = new SpoutItemStack(player.getItemInHand());
+
+		if (itemInHand.isCustomItem()) {
+			CustomItem ci = (CustomItem) itemInHand.getMaterial();
+			if (ci instanceof GiantEgg) {
+				try {
+					event.getClickedBlock().getWorld().spawnEntity(location, EntityType.GIANT);
+				} catch (Exception e) {
+				}
+			}
 		}
 	}
 }
