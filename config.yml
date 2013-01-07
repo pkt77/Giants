@@ -2,6 +2,8 @@ Giants Configuration:
   Giant Stats:
     Experience: 5
     Health: 100
+    Kick Attack: false
+    Lightning Attack: false
     Fire Attack:
       Enabled: false
       Ticks for Target: 100
@@ -22,6 +24,7 @@ Giants Configuration:
       Extreme Hills: true
       Ice Mountains: false
       Mushroom Island: true
+      Other: true
   Debug Mode: true
   Language:
-    Debug Message: '&2A Giant has spawned! X:&F%X &2Y:&F%Y &2Z:&F%Z'
+    Debug Message: '&2A Giant has spawned at X:&F%X &2Y:&F%Y &2Z:&F%Z'

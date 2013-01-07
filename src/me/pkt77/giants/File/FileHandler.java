@@ -61,15 +61,14 @@ public class FileHandler {
 			YamlConfiguration Config = YamlConfiguration.loadConfiguration(file);
 			Config.set("Giants Configuration.Giant Stats.Experience", new Integer(5));
 			Config.set("Giants Configuration.Giant Stats.Health", new Integer(100));
-			//Config.set("Giants Configuration.Giant Stats.Damage", new Integer(100));
+			Config.set("Giants Configuration.Giant Stats.Kick Attack", false);
+			Config.set("Giants Configuration.Giant Stats.Lightning Attack", false);
 			Config.set("Giants Configuration.Giant Stats.Fire Attack.Enabled", false);
 			Config.set("Giants Configuration.Giant Stats.Fire Attack.Ticks for Target", new Integer(100));
 			Config.set("Giants Configuration.Giant Stats.Fire Attack.Ticks for Giant", new Integer(100));
 			Config.set("Giants Configuration.Giant Stats.Spawn Worlds", WorldHandler.getServerWorlds());
 			Config.set("Giants Configuration.Giant Stats.Drops", Arrays.asList(this.loadDefaultDrop()));
 			Config.set("Giants Configuration.Spawn Settings.Spawn Chance", new Integer(10));
-			//Config.set("Giants Configuration.Spawn Settings.Time.Day", true);
-			//Config.set("Giants Configuration.Spawn Settings.Time.Night", false);
 			Config.set("Giants Configuration.Spawn Settings.Biomes.Forest", false);
 			Config.set("Giants Configuration.Spawn Settings.Biomes.Desert", true);
 			Config.set("Giants Configuration.Spawn Settings.Biomes.Plains", true);
@@ -80,8 +79,9 @@ public class FileHandler {
 			Config.set("Giants Configuration.Spawn Settings.Biomes.Extreme Hills", true);
 			Config.set("Giants Configuration.Spawn Settings.Biomes.Ice Mountains", false);
 			Config.set("Giants Configuration.Spawn Settings.Biomes.Mushroom Island", true);
+			Config.set("Giants Configuration.Spawn Settings.Biomes.Other", true);
 			Config.set("Giants Configuration.Debug Mode", true);
-			Config.set("Giants Configuration.Language.Debug Message", "&2A Giant has spawned! X:&F%X &2Y:&F%Y &2Z:&F%Z");
+			Config.set("Giants Configuration.Language.Debug Message", "&2A Giant has spawned at X:&F%X &2Y:&F%Y &2Z:&F%Z");
 			//Config.set("Giants Configuration.Language.Death Messages", Arrays.asList(this.loadDefaultDeathMessage()));
 			try {
 				Config.save(file);

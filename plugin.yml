@@ -1,6 +1,6 @@
 name: Giants
 main: me.pkt77.giants.Giants
-version: 3.0
+version: 4.0
 author: pkt77
 softdepend: [Spout]
 

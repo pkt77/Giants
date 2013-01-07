@@ -6,15 +6,17 @@ import me.pkt77.giants.Giants;
 import me.pkt77.giants.events.Listeners;
 import me.pkt77.giants.file.Config;
 import me.pkt77.giants.file.FileHandler;
-import org.bukkit.World;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Giant;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 public class API {
 	private static Giants _giants;
 	private Commands commands;
 	private static FileHandler fileHandler;
+	private static LivingEntity entity;
 
 	public API(Giants giants) {
 		_giants = giants;
@@ -41,23 +43,18 @@ public class API {
 		return fileHandler;
 	}
 
-	public static boolean isDay() {
-		World world = _giants.getServer().getWorld(API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Spawn Worlds"));
-		long worldTime = world.getTime();
-
-		if (worldTime >= 0 && worldTime <= 1400) {
-			return true;
-		}
-		return false;
+	public static LivingEntity getEntity() {
+		return entity;
 	}
 
-	public static boolean isNight() {
-		World world = _giants.getServer().getWorld(API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Spawn Worlds"));
-		long worldTime = world.getTime();
+	public static LivingEntity getTarget(LivingEntity entity) {
+		if (entity instanceof Creature) {
+			LivingEntity target = ((Creature) entity).getTarget();
 
-		if (worldTime >= 14000 && worldTime <= 24000) {
-			return true;
+			if (target instanceof Player) {
+				return target;
+			}
 		}
-		return false;
+		return null;
 	}
 }

@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 
 public class Commands implements CommandExecutor {
@@ -26,11 +27,19 @@ public class Commands implements CommandExecutor {
 				return true;
 			} else {
 				if (args[0].equalsIgnoreCase("reload")) {
-					if (_giants.getPermissions().hasReloadPerm(sender)) {
-						API.getFileHandler().loadConfig();
-						sender.sendMessage(ChatColor.GREEN + "Giants config file reloaded");
+					@SuppressWarnings("unused")
+					Player player = null;
+					if (sender instanceof Player) {
+						player = (Player) sender;
+						if (_giants.getPermissions().hasReloadPerm(sender)) {
+							API.getFileHandler().loadConfig();
+							sender.sendMessage(ChatColor.GREEN + "Giants config file reloaded.");
+						} else {
+							_giants.getPermissions().sendPermissionsMessage(sender);
+						}
 					} else {
-						_giants.getPermissions().sendPermissionsMessage(sender);
+						API.getFileHandler().loadConfig();
+						System.out.println("Giants config file reloaded.");
 					}
 				}
 			}

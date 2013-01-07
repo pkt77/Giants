@@ -77,6 +77,11 @@ public class SpawnEvent extends Event {
 					entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
 				}
 			}
+			if ((biome == Biome.BEACH) || (biome == Biome.FROZEN_OCEAN) || (biome == Biome.FROZEN_RIVER) || (biome == Biome.MUSHROOM_SHORE) || (biome == Biome.OCEAN) || (biome == Biome.RIVER)) {
+				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Other") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Biomes.Other").equalsIgnoreCase("true")) {
+
+				}
+			}
 			if (biome == Biome.HELL) {
 				entity = loc.getWorld().spawnEntity(location, EntityType.GIANT);
 			}

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Random;
 import me.pkt77.giants.Giants;
 import me.pkt77.giants.file.Config;
-import me.pkt77.giants.spout.GiantEgg;
 import me.pkt77.giants.utils.API;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,17 +21,16 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
-import org.getspout.spoutapi.inventory.SpoutItemStack;
-import org.getspout.spoutapi.material.CustomItem;
+import org.bukkit.util.Vector;
 
 public class Listeners implements Listener {
 	private Giants _giants;
 
-	public Listeners(Giants plugin) {
-		_giants = plugin;
-		_giants.getServer().getPluginManager().registerEvents(this, plugin);
+	public Listeners(Giants giants) {
+		_giants = giants;
+		_giants.getServer().getPluginManager().registerEvents(this, giants);
 	}
 
 	@EventHandler
@@ -54,7 +52,7 @@ public class Listeners implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void onCreatureSpawn(CreatureSpawnEvent event) {
+	public void GiantSpawnEvent(CreatureSpawnEvent event) {
 		Entity entity = event.getEntity();
 		EntityType type = event.getEntityType();
 		SpawnReason spawnReason = event.getSpawnReason();
@@ -64,7 +62,7 @@ public class Listeners implements Listener {
 		}
 
 		if (spawnReason == SpawnReason.NATURAL) {
-			if ((type == EntityType.ZOMBIE) || (type == EntityType.SKELETON) || (type == EntityType.COW) || (type == EntityType.SHEEP) || (type == EntityType.MUSHROOM_COW) || (type == EntityType.PIG_ZOMBIE) || (type == EntityType.ENDERMAN)) {
+			if ((type == EntityType.ZOMBIE) || (type == EntityType.COW) || (type == EntityType.MUSHROOM_COW) || (type == EntityType.PIG_ZOMBIE) || (type == EntityType.ENDERMAN)) {
 				String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Spawn Chance");
 				float sRate;
 				try {
@@ -106,7 +104,7 @@ public class Listeners implements Listener {
 	}
 
 	@EventHandler
-	public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+	public void setGiantHealth(EntityRegainHealthEvent event) {
 		Entity entity = event.getEntity();
 		String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Health");
 		int health;
@@ -123,55 +121,101 @@ public class Listeners implements Listener {
 	}
 
 	@EventHandler
-	public void onEntityTarget(EntityTargetEvent event) {
-		String string1 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Ticks for Target");
-		String string2 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Ticks for Giant");
+	public void FireAttack(EntityTargetEvent event) {
+		String ticks1 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Ticks for Target");
+		String ticks2 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Ticks for Giant");
 		Entity entity = event.getEntity();
 		Entity target = event.getTarget();
 		int ticksTarget;
 		int ticksGiant;
 
 		try {
-			ticksTarget = Integer.parseInt(string1);
-			ticksGiant = Integer.parseInt(string2);
+			ticksTarget = Integer.parseInt(ticks1);
+			ticksGiant = Integer.parseInt(ticks2);
 		} catch (Exception e) {
 			ticksTarget = 0;
 			ticksGiant = 0;
 		}
 
 		if ((entity instanceof LivingEntity)) {
-			if (API.isGiant(entity) && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Enabled") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Enabled").equalsIgnoreCase("true")) {
-				try {
-					event.getTarget().setFireTicks(ticksTarget);
-					event.getEntity().setFireTicks(ticksGiant);
-				} catch (Exception e) {
+			if (API.isGiant(entity)) {
+				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Enabled") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Enabled").equalsIgnoreCase("true")) {
+					try {
+						event.getTarget().setFireTicks(ticksTarget);
+						event.getEntity().setFireTicks(ticksGiant);
+					} catch (Exception e) {
+					}
+				} else {
+					event.setTarget(target);
 				}
-			} else {
-				event.setTarget(target);
+			}
+		}
+	}
+
+	@EventHandler
+	public void LightningAttack(EntityTargetEvent event) {
+		Entity entity = event.getEntity();
+		Entity target = event.getTarget();
+
+		if ((entity instanceof LivingEntity)) {
+			if (API.isGiant(entity)) {
+				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Lightning Attack") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Lightning Attack").equalsIgnoreCase("true")) {
+					try {
+						target.getLocation().getWorld().strikeLightning(target.getLocation());
+					} catch (Exception e) {
+					}
+				} else {
+					event.setTarget(target);
+				}
 			}
 		}
 	}
 
 	/*
 		@EventHandler
-		public void onEntityHitEvent(EntityDamageEvent event) {
-			String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Damage");
-			int damage;
-
-			try {
-				damage = Integer.parseInt(string);
-			} catch (Exception e) {
-				damage = 100;
-			}
-
+		public void ThrownBoulderAttack(EntityTargetEvent event) {
 			Entity entity = event.getEntity();
-			if (API.isGiant(entity)) {
-				event.setDamage(damage);
+			final Entity target = event.getTarget();
+
+			if ((entity instanceof LivingEntity)) {
+				if (API.isGiant(entity)) {
+					_giants.getServer().getScheduler().scheduleSyncDelayedTask(_giants, new Runnable() {
+						@Override
+						public void run() {
+							try {
+								target.getLocation().getWorld().spawnEntity(target.getLocation(), EntityType.FIREBALL);
+							} catch (Exception e) {
+							}
+						}
+					}, 60L);
+				}
 			}
 		}*/
 
 	@EventHandler
-	public void onGiantDeath(EntityDeathEvent event) {
+	public void KickAttack(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Kick Attack") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Kick Attack").equalsIgnoreCase("true")) {
+			Random pick = new Random();
+			int chance = 0;
+			for (int counter = 1; counter <= 1; counter++) {
+				chance = 1 + pick.nextInt(100);
+			}
+			if (chance == 50) {
+				for (Entity entity : player.getNearbyEntities(5, 5, 5)) {
+					if (API.isGiant(entity)) {
+						if (entity.getNearbyEntities(5, 5, 5).contains(player)) {
+							Vector kick = new Vector(0, 5, 0);
+							player.setVelocity(kick);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void GiantDrops(EntityDeathEvent event) {
 		Entity entity = event.getEntity();
 		String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Experience");
 		int exp;
@@ -251,23 +295,6 @@ public class Listeners implements Listener {
 				drops.add(newItem);
 			}
 			event.getDrops().addAll(drops);
-		}
-	}
-
-	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		Player player = event.getPlayer();
-		Location location = player.getLocation();
-		SpoutItemStack itemInHand = new SpoutItemStack(player.getItemInHand());
-
-		if (itemInHand.isCustomItem()) {
-			CustomItem ci = (CustomItem) itemInHand.getMaterial();
-			if (ci instanceof GiantEgg) {
-				try {
-					event.getClickedBlock().getWorld().spawnEntity(location, EntityType.GIANT);
-				} catch (Exception e) {
-				}
-			}
 		}
 	}
 }

@@ -13,7 +13,7 @@ public class WorldHandler {
 	private API api;
 
 	public WorldHandler(Giants giants) {
-		WorldHandler._giants = giants;
+		_giants = giants;
 	}
 
 	public static List<String> getServerWorlds() {
