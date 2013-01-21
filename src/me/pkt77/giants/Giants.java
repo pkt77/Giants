@@ -1,18 +1,17 @@
 package me.pkt77.giants;
 
-import me.pkt77.giants.file.WorldHandler;
+import java.util.logging.Logger;
 import me.pkt77.giants.spout.GiantEgg;
-import me.pkt77.giants.spout.SpoutListeners;
+import me.pkt77.giants.spout.SpoutListener;
 import me.pkt77.giants.utils.API;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Giants extends JavaPlugin {
-	private final Permissions permissions = new Permissions(this);
-	private final WorldHandler worldHandler = new WorldHandler(this);
-	public GiantEgg giantEgg;
+	public final Logger log = Logger.getLogger("Minecraft");
 
-	/*CHANGE LOG:
+	/*
+	 * CHANGE LOG:
 	 * V1.1 :
 	 * Giants no longer spawn from spawn eggs
 	 * changed spawn chance to a float so it can store decimals
@@ -39,26 +38,28 @@ public class Giants extends JavaPlugin {
 	 * Update to craftbukkit-1.4.6-R0.3 and SpoutPlugin 1412
 	 * Added Kick Attack
 	 * Added Lightning Attack
-	 * \giants reload  can now be used in console
+	 * \giants reload can now be used in console
+	 * V5.0 :
+	 * Updated to Craftbukkit-1.4.7-R0.1 and SpoutPlugin 1.4.7-R0.2
+	 * Added "Throw Boulder Attack"
+	 * Added "Stomp Attack"
+	 * Added "Spawn Zombies Attack"
+	 * Added Sounds to some of the Attack Mechanisms (the ones that don't have sounds)
+	 * Added Config to set the height the player is kicked (for the Kick Attack)
+	 * Cleaned code
+	 * Organized the config.yml
+	 * Added option to use Spout features
 	 */
 
 	@Override
 	public void onEnable() {
 		new API(this);
 		if (Bukkit.getPluginManager().getPlugin("Spout") != null) {
-			System.out.println("[Giants] Found SpoutPlugin: Enabling Spout features.");
-			giantEgg = new GiantEgg(this);
-			new SpoutListeners(this);
+			log.info("[Giants] Found SpoutPlugin: Enabling Spout features.");
+			new GiantEgg(this);
+			new SpoutListener(this);
 		} else {
-			System.out.println("[Giants] Cannot Find SpoutPlugin: Disabling Spout features.");
+			log.info("[Giants] Cannot Find SpoutPlugin: Disabling Spout features.");
 		}
-	}
-
-	public Permissions getPermissions() {
-		return permissions;
-	}
-
-	public WorldHandler getWorldHandler() {
-		return worldHandler;
 	}
 }

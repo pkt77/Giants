@@ -9,8 +9,10 @@ import me.pkt77.giants.utils.API;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,11 +37,11 @@ public class Listeners implements Listener {
 
 	@EventHandler
 	public void onGiantSpawn(SpawnEvent event) {
-		if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Debug Mode") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Debug Mode").equalsIgnoreCase("true")) {
+		if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Debug Mode").equalsIgnoreCase("true")) {
 			String message = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Language.Debug Message");
 			if (message != null) {
 				for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-					if (_giants.getPermissions().hasDubugPerm(player)) {
+					if (player.hasPermission("giants.debug") || player.hasPermission("giants.*")) {
 						message = ChatColor.translateAlternateColorCodes('&', message);
 						String x = String.valueOf(Math.round(event.getLocation().getX()));
 						String y = String.valueOf(Math.round(event.getLocation().getY()));
@@ -63,7 +65,7 @@ public class Listeners implements Listener {
 
 		if (spawnReason == SpawnReason.NATURAL) {
 			if ((type == EntityType.ZOMBIE) || (type == EntityType.COW) || (type == EntityType.MUSHROOM_COW) || (type == EntityType.PIG_ZOMBIE) || (type == EntityType.ENDERMAN)) {
-				String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Spawn Chance");
+				String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Spawn Settings.Chance");
 				float sRate;
 				try {
 					sRate = Float.parseFloat(string);
@@ -104,11 +106,10 @@ public class Listeners implements Listener {
 	}
 
 	@EventHandler
-	public void setGiantHealth(EntityRegainHealthEvent event) {
+	public void GiantHealth(EntityRegainHealthEvent event) {
 		Entity entity = event.getEntity();
 		String string = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Health");
 		int health;
-
 		try {
 			health = Integer.parseInt(string);
 		} catch (Exception e) {
@@ -122,13 +123,12 @@ public class Listeners implements Listener {
 
 	@EventHandler
 	public void FireAttack(EntityTargetEvent event) {
-		String ticks1 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Ticks for Target");
-		String ticks2 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Ticks for Giant");
+		String ticks1 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Attack Mechanisms.Fire Attack.Ticks for Target");
+		String ticks2 = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Attack Mechanisms.Fire Attack.Ticks for Giant");
 		Entity entity = event.getEntity();
 		Entity target = event.getTarget();
 		int ticksTarget;
 		int ticksGiant;
-
 		try {
 			ticksTarget = Integer.parseInt(ticks1);
 			ticksGiant = Integer.parseInt(ticks2);
@@ -139,7 +139,10 @@ public class Listeners implements Listener {
 
 		if ((entity instanceof LivingEntity)) {
 			if (API.isGiant(entity)) {
-				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Enabled") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Fire Attack.Enabled").equalsIgnoreCase("true")) {
+				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Attack Mechanisms.Fire Attack.Enabled").equalsIgnoreCase("true")) {
+					if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Sounds.Fire Attack").equalsIgnoreCase("true")) {
+						target.getLocation().getWorld().playSound(target.getLocation(), Sound.FIRE, 1, 0);
+					}
 					try {
 						event.getTarget().setFireTicks(ticksTarget);
 						event.getEntity().setFireTicks(ticksGiant);
@@ -159,7 +162,7 @@ public class Listeners implements Listener {
 
 		if ((entity instanceof LivingEntity)) {
 			if (API.isGiant(entity)) {
-				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Lightning Attack") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Lightning Attack").equalsIgnoreCase("true")) {
+				if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Attack Mechanisms.Lightning Attack").equalsIgnoreCase("true")) {
 					try {
 						target.getLocation().getWorld().strikeLightning(target.getLocation());
 					} catch (Exception e) {
@@ -171,31 +174,50 @@ public class Listeners implements Listener {
 		}
 	}
 
-	/*
-		@EventHandler
-		public void ThrownBoulderAttack(EntityTargetEvent event) {
-			Entity entity = event.getEntity();
-			final Entity target = event.getTarget();
+	@EventHandler
+	public void ThrownBoulderAttack(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		boolean inRange = false;
+		Random pick = new Random();
+		int chance = 0;
+		for (int counter = 1; counter <= 1; counter++) {
+			chance = 1 + pick.nextInt(100);
+		}
 
-			if ((entity instanceof LivingEntity)) {
-				if (API.isGiant(entity)) {
-					_giants.getServer().getScheduler().scheduleSyncDelayedTask(_giants, new Runnable() {
-						@Override
-						public void run() {
-							try {
-								target.getLocation().getWorld().spawnEntity(target.getLocation(), EntityType.FIREBALL);
-							} catch (Exception e) {
+		for (Entity entity : player.getNearbyEntities(15, 12, 15)) {
+			if (API.isGiant(entity)) {
+				if (entity.getNearbyEntities(15, 12, 15).contains(player) && !entity.getNearbyEntities(5, 3, 5).contains(player)) {
+					inRange = true;
+				}
+				if (inRange == true) {
+					if (chance == 50) {
+						if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Attack Mechanisms.Throw Boulder Attack").equalsIgnoreCase("true")) {
+							Vector direction = ((LivingEntity) entity).getEyeLocation().getDirection().multiply(2);
+							Fireball fireball = entity.getWorld().spawn(((LivingEntity) entity).getEyeLocation().add(direction.getX(), direction.getY() - 5, direction.getZ()), Fireball.class);
+							fireball.setShooter((LivingEntity) entity);
+							if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Sounds.Throw Boulder Attack").equalsIgnoreCase("true")) {
+								player.getLocation().getWorld().playSound(player.getLocation(), Sound.GHAST_FIREBALL, 1, 0);
 							}
 						}
-					}, 60L);
+					}
 				}
 			}
-		}*/
+		}
+	}
 
 	@EventHandler
 	public void KickAttack(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
-		if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Kick Attack") != null && API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Giant Stats.Kick Attack").equalsIgnoreCase("true")) {
+		if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Attack Mechanisms.Kick Attack.Enabled").equalsIgnoreCase("true")) {
+			String config = API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Attack Mechanisms.Kick Attack.Kick Height");
+			int height;
+
+			try {
+				height = Integer.parseInt(config);
+			} catch (Exception e) {
+				height = 1;
+			}
+
 			Random pick = new Random();
 			int chance = 0;
 			for (int counter = 1; counter <= 1; counter++) {
@@ -205,8 +227,31 @@ public class Listeners implements Listener {
 				for (Entity entity : player.getNearbyEntities(5, 5, 5)) {
 					if (API.isGiant(entity)) {
 						if (entity.getNearbyEntities(5, 5, 5).contains(player)) {
-							Vector kick = new Vector(0, 5, 0);
-							player.setVelocity(kick);
+							player.setVelocity(new Vector(0, height, 0));
+							if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Sounds.Kick Attack").equalsIgnoreCase("true")) {
+								player.getLocation().getWorld().playSound(player.getLocation(), Sound.LAVA_POP, 1, 0);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void StompAttack(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Attack Mechanisms.Stomp Attack").equalsIgnoreCase("true")) {
+			Random pick = new Random();
+			int chance = 0;
+			for (int counter = 1; counter <= 1; counter++) {
+				chance = 1 + pick.nextInt(100);
+			}
+			if (chance == 50) {
+				for (Entity entity : player.getNearbyEntities(3, 2, 3)) {
+					if (API.isGiant(entity)) {
+						if (entity.getNearbyEntities(3, 2, 3).contains(player)) {
+							player.getLocation().getWorld().createExplosion(player.getLocation(), 1.0F);
 						}
 					}
 				}
@@ -227,10 +272,10 @@ public class Listeners implements Listener {
 		}
 
 		if (API.isGiant(entity)) {
+			if (API.getFileHandler().getProperty(Config.CONFIG, "Giants Configuration.Sounds.Death").equalsIgnoreCase("true")) {
+				entity.getLocation().getWorld().playSound(entity.getLocation(), Sound.ENDERDRAGON_GROWL, 1, 0);
+			}
 			event.setDroppedExp(exp);
-		}
-
-		if (API.isGiant(entity)) {
 			List<String> newDrop = API.getFileHandler().getPropertyList(Config.CONFIG, "Giants Configuration.Giant Stats.Drops");
 			if (newDrop == null || newDrop.contains("") || newDrop.toString().equalsIgnoreCase("[]")) {
 				return;

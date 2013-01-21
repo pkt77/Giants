@@ -1,18 +1,11 @@
 Giants Configuration:
   Giant Stats:
-    Experience: 5
     Health: 100
-    Kick Attack: false
-    Lightning Attack: false
-    Fire Attack:
-      Enabled: false
-      Ticks for Target: 100
-      Ticks for Giant: 100
-    Spawn Worlds:
+    Experience: 5
     Drops:
-    - '1:0:1'
   Spawn Settings:
-    Spawn Chance: 10
+    Chance: 10
+    Worlds:
     Biomes:
       Forest: false
       Desert: true
@@ -25,6 +18,27 @@ Giants Configuration:
       Ice Mountains: false
       Mushroom Island: true
       Other: true
-  Debug Mode: true
+  Attack Mechanisms:
+    Lightning Attack: false
+    Throw Boulder Attack: false
+    Stomp Attack: false
+    Kick Attack:
+      Enabled: false
+      Kick Height: 1
+    Fire Attack:
+      Enabled: false
+      Ticks for Target: 100
+      Ticks for Giant: 100
+    Spawn Zombies Attack:
+      Enabled: false
+      Zombies to Spawn: 5
+  Sounds:
+    Fire Attack: true
+    Throw Boulder Attack: true
+    Kick Attack: true
+    Death: true
+  Otional Dependencies:
+    Spout: true
+  Debug Mode: false
   Language:
     Debug Message: '&2A Giant has spawned at X:&F%X &2Y:&F%Y &2Z:&F%Z'

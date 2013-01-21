@@ -19,27 +19,26 @@ public class Commands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		if (commandLabel.equalsIgnoreCase("giants")) {
 			if (args.length == 0) {
-				if (_giants.getPermissions().hasAnyPerm(sender)) {
+				if (sender.hasPermission("giants.reload") || sender.hasPermission("giants.*")) {
 					sender.sendMessage(ChatColor.GREEN + "===== Giants Commands ===== \n" + "/giants reload   Reloads the config file.");
 				} else {
-					_giants.getPermissions().sendPermissionsMessage(sender);
+					sender.sendMessage(ChatColor.RED + "You do not have permission to use this command");
 				}
 				return true;
 			} else {
 				if (args[0].equalsIgnoreCase("reload")) {
-					@SuppressWarnings("unused")
 					Player player = null;
 					if (sender instanceof Player) {
 						player = (Player) sender;
-						if (_giants.getPermissions().hasReloadPerm(sender)) {
+						if (player.hasPermission("giants.reload")) {
 							API.getFileHandler().loadConfig();
 							sender.sendMessage(ChatColor.GREEN + "Giants config file reloaded.");
 						} else {
-							_giants.getPermissions().sendPermissionsMessage(sender);
+							sender.sendMessage(ChatColor.RED + "You do not have permission to use this command");
 						}
 					} else {
 						API.getFileHandler().loadConfig();
-						System.out.println("Giants config file reloaded.");
+						_giants.log.info("Giants config file reloaded.");
 					}
 				}
 			}
