@@ -61,5 +61,11 @@ public class Giants extends JavaPlugin {
 		} else {
 			log.info("[Giants] Cannot Find SpoutPlugin: Disabling Spout features.");
 		}
+		log.info("[Giants] --- Enabled ---");
+	}
+	
+	@Override
+	public void onDisable(){
+		log.info("[Giants] --- Disabled ---");
 	}
 }
