@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Giants extends JavaPlugin {
 	public final Logger log = Logger.getLogger("Minecraft");
+	private API api;
 
 	/*
 	 * CHANGE LOG:
@@ -53,7 +54,8 @@ public class Giants extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		new API(this);
+		api = new API();
+		api.setup(this);
 		if (Bukkit.getPluginManager().getPlugin("Spout") != null) {
 			log.info("[Giants] Found SpoutPlugin: Enabling Spout features.");
 			new GiantEgg(this);
@@ -61,5 +63,15 @@ public class Giants extends JavaPlugin {
 		} else {
 			log.info("[Giants] Cannot Find SpoutPlugin: Disabling Spout features.");
 		}
+		log.info("[Giants] --- Enabled ---");
+	}
+	
+	@Override
+	public void onDisable(){
+		log.info("[Giants] --- Disabled ---");
+	}
+	
+	public API getAPI(){
+		return api;
 	}
 }

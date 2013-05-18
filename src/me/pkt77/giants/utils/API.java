@@ -11,31 +11,35 @@ import org.bukkit.entity.Giant;
 import org.bukkit.entity.LivingEntity;
 
 public class API {
-	private static Giants _giants;
+	private static Giants giants;
 	private Commands commands;
 	private static FileHandler fileHandler;
 
+	@Deprecated
 	public API(Giants giants) {
-		_giants = giants;
+	}
+	
+	public void setup(Giants giants){
+		this.giants = giants;
 		new Listeners(_giants);
 		commands = new Commands(_giants);
-		_giants.getCommand("giants").setExecutor(commands);
+		this.giants.getCommand("giants").setExecutor(commands);
 		fileHandler = new FileHandler(_giants);
 	}
 
-	public static boolean isGiant(Entity entity) {
+	public boolean isGiant(Entity entity) {
 		return entity instanceof Giant;
 	}
 
-	public static boolean isGiant(LivingEntity livingEntity) {
+	public boolean isGiant(LivingEntity livingEntity) {
 		return livingEntity instanceof Giant;
 	}
 
-	public static List<String> getGiantSpawnWorlds() {
+	public List<String> getGiantSpawnWorlds() {
 		return getFileHandler().getPropertyList(Config.CONFIG, "Giants Configuration.Spawn Settings.Worlds");
 	}
 
-	public static FileHandler getFileHandler() {
+	public FileHandler getFileHandler() {
 		return fileHandler;
 	}
 }

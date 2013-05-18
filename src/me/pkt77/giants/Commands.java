@@ -31,13 +31,13 @@ public class Commands implements CommandExecutor {
 					if (sender instanceof Player) {
 						player = (Player) sender;
 						if (player.hasPermission("giants.reload")) {
-							API.getFileHandler().loadConfig();
+							_giants.getAPI().getFileHandler().loadConfig();
 							sender.sendMessage(ChatColor.GREEN + "Giants config file reloaded.");
 						} else {
 							sender.sendMessage(ChatColor.RED + "You do not have permission to use this command");
 						}
 					} else {
-						API.getFileHandler().loadConfig();
+						_giants.getAPI().getFileHandler().loadConfig();
 						_giants.log.info("Giants config file reloaded.");
 					}
 				}
