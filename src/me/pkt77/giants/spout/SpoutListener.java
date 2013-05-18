@@ -13,11 +13,11 @@ import org.getspout.spoutapi.inventory.SpoutItemStack;
 import org.getspout.spoutapi.material.CustomItem;
 
 public class SpoutListener implements Listener {
-	private Giants _giants;
+	private Giants giants;
 
 	public SpoutListener(Giants giants) {
-		_giants = giants;
-		_giants.getServer().getPluginManager().registerEvents(this, giants);
+		this.giants = giants;
+		this.giants.getServer().getPluginManager().registerEvents(this, giants);
 	}
 
 	@EventHandler
